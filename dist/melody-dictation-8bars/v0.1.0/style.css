@@ -51,7 +51,7 @@ body {
     border: 1px solid #ccc;
     margin-top: 20px;
     padding: 10px;
-    width: auto;/*100vw;*/
+    width: 100%;/*100vw;*/
     overflow-x: auto;
     white-space: nowrap;
     box-sizing: border-box;
