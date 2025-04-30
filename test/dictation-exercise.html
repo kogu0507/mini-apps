@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dictation-exercise.html</title>
+    <style>
+        /* ▼▼▼ ローディング表示のスタイルを追加 ▼▼▼ */
+        #loading-indicator {
+            position: fixed;
+            /* 画面に固定 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* 半透明の背景 */
+            display: flex;
+            /* Flexboxで中央揃え */
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            /* 縦方向に並べる */
+            z-index: 9999;
+            /* 他の要素より手前に表示 */
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        /* 簡単なスピナーアニメーション */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            /* Light grey */
+            border-top: 4px solid #3498db;
+            /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+            /* テキストとの間隔 */
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 初期状態では非表示にしておく場合（JSで制御） */
+
+        #loading-indicator.hidden {
+            display: none;
+        }
+
+        /* ▲▲▲ ローディング表示のスタイルを追加 ▲▲▲ */
+
+
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        #svg-container {
+            /*  border: 1px solid #ccc;  */
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            /*100vw;*/
+            overflow-x: auto;
+            white-space: nowrap;
+            box-sizing: border-box;
+            /* 追加 */
+            /*  height: 350px;  */
+        }
+
+        #svg-container img,
+        #svg-container svg {
+            /* 必要に応じて画像やSVGのスタイルも調整 */
+            display: inline-block;
+            /* 横並びにするために必要 */
+            max-width: none;
+            /* 画像の最大幅を解除し、本来のサイズで表示 */
+            height: auto;
+            /* 高さの比率は維持 */
+        }
+
+        #log-container {
+            margin-top: 20px;
+            color: red;
+        }
+
+        .container-20 {
+            margin: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /*  ---------- toggle-link ----------  */
+
+        .toggle-link {
+            display: inline-block;
+            padding: 10px 15px;
+            /*  background-color: #fafafa;  */
+            /*  border: 1px solid #ddd;  */
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+            position: relative;
+            /* 疑似要素の基準点 */
+            padding-right: 30px;
+            /* 矢印のスペース確保 */
+        }
+
+        .toggle-link::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 7px solid #333;
+        }
+
+        .open::after {
+            border-top: 7px solid #333;
+            border-right: 5px solid transparent;
+            border-left: 5px solid transparent;
+        }
+
+        /*  ----------buttons----------  */
+        #play-section-buttons {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .button-container {
+            display: grid;
+            gap: 10px;
+
+            padding-top: 15px;
+            padding-bottom: 15px
+        }
+
+        #play-practice-exam-button-container {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        #play-1-measure-button-container {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        #play-2-measures-button-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        #play-4-measures-button-container {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        #play-8-measures-button-container {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        .button-container button {
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        .play-8-measures-button {
+            height: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>課題</h2>
+
+    <h3>再生</h3>
+    <section id="play-section" class="container-20">
+        <section id="buttons-section" class="container-20">
+            <div id="play-practice-exam-button-container" class="button-container">
+                <button id="play-tonic-chord-button" class="play-midi-button" data-task-id="tonic-chord">主和音</button>
+                <button id="play-practice-exam-button" data-sequence-id="exam-sequence-1">模擬試験</button>
+                <button id="stop-button">停止</button>
+            </div>
+            <div>
+                <button id="play-section-buttons-toggle-link" data-toggle-visibility-target="#play-section-buttons">部分再生
+                    表示／非表示</button>
+            </div>
+
+            <div id="play-section-buttons">
+                <div id="play-8-measures-button-container" class="button-container">
+                    <button id="play-1to8-button" class="play-button play-8-measures-button play-midi-button"
+                        data-task-id="task1-1to8" data-start-measure="1" data-end-measure="8">play 1 to 8</button>
+                </div>
+                <div id="play-4-measures-button-container" class="button-container">
+                    <button id="play-1to4-button" class="play-button play-4-measures-button play-midi-button"
+                        data-task-id="task1-1to4" data-start-measure="1" data-end-measure="4">play 1 to 4</button>
+                    <button id="play-5to8-button" class="play-button play-4-measures-button play-midi-button"
+                        data-task-id="task1-5to8" data-start-measure="5" data-end-measure="8">play 5 to 8</button>
+                </div>
+                <div id="play-2-measures-button-container" class="button-container">
+                    <button id="play-1to2-button" class="play-button play-2-measures-button play-midi-button"
+                        data-task-id="task1-1to2" data-start-measure="1" data-end-measure="2">play 1 to 2</button>
+                    <button id="play-3to4-button" class="play-button play-2-measures-button play-midi-button"
+                        data-task-id="task1-3to4" data-start-measure="3" data-end-measure="4">play 3 to 4</button>
+                    <button id="play-5to6-button" class="play-button play-2-measures-button play-midi-button"
+                        data-task-id="task1-5to6" data-start-measure="5" data-end-measure="6">play 5 to 6</button>
+                    <button id="play-7to8-button" class="play-button play-2-measures-button play-midi-button"
+                        data-task-id="task1-7to8" data-start-measure="7" data-end-measure="8">play 7 to 8</button>
+                </div>
+                <div id="play-1-measure-button-container" class="button-container">
+
+                    <button id="play-1-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-1" data-start-measure="1" data-end-measure="1">play 1</button>
+                    <button id="play-2-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-2" data-start-measure="2" data-end-measure="2">play 2</button>
+                    <button id="play-3-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-3" data-start-measure="3" data-end-measure="3">play 3</button>
+                    <button id="play-4-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-4" data-start-measure="4" data-end-measure="4">play 4</button>
+                    <button id="play-5-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-5" data-start-measure="5" data-end-measure="5">play 5</button>
+                    <button id="play-6-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-6" data-start-measure="6" data-end-measure="6">play 6</button>
+                    <button id="play-7-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-7" data-start-measure="7" data-end-measure="7">play 7</button>
+                    <button id="play-8-button" class="play-button play-1-measure-button play-midi-button"
+                        data-task-id="task1-8" data-start-measure="8" data-end-measure="8">play 8</button>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <h3>ヒント</h3>
+    <button id="hint-toggle" data-toggle-visibility-target="#hint-container">ヒント 表示／非表示</button>
+    <div id="hint-container">ヒントが入ります。</div>
+
+    <h3>解答</h3>
+    <section id="answer-section">
+        <button id="svg-toggle" data-toggle-visibility-target="#svg-container">解答 表示／非表示</button>
+        <div id="container-section">
+            <div id="svg-container"></div>
+            <pre id="log-container"></pre>
+        </div>
+        <div class="container-20">
+            <label for="svg-size-slider">画像サイズ:</label>
+            <span id="svg-size-value">1.0</span>
+            <input type="range" id="svg-size-slider" style="width: 100%;" min="0.8" max="2.0" step="0.1" value="1.0">
+        </div>
+        <div class="container-20">
+            <!-- コンテナ高さ調整スライダーのラベル -->
+            <label for="container-height-slider">コンテナの高さ:</label>
+            <!-- 現在の高さを表示するspan要素 -->
+            <span id="container-height-value">350</span>px
+            <!-- コンテナ高さ調整用のrange input要素 -->
+            <input type="range" id="container-height-slider" style="width: 100%;" min="200" max="800" step="10"
+                value="350" disabled> <!-- disabled は残す or 削除 -->
+        </div>
+
+    </section>
+
+    <h2>ポイント解説</h2>
+
+
+
+
+    <script type="text/javascript" data-load-url="https://kogu0507.github.io/mini-apps/data/dictation-exercise/melody-dictation-001.js"></script>
+    <script type="module">
+        // TODO: エントリーポイントの例を作成中
+        document.addEventListener('DOMContentLoaded', () => {
+            const scriptElements = document.querySelectorAll('.dictation-exercise-container script[data-load-url]');
+
+            scriptElements.forEach(async (scriptElement) => {
+                const dataUrl = scriptElement.dataset.loadUrl;
+                if (dataUrl) {
+                    try {
+                        const data = await import(/* webpackIgnore: true */ `${dataUrl}`);
+                        console.log('Loaded data:', data);
+                        // ロードしたデータを使った処理
+                    } catch (error) {
+                        console.error('Failed to load data:', error);
+                    }
+                }
+            });
+
+            // 他のエントリーポイントのロジック
+        });
+
+    </script>
+
+    <script type="module">
+        // TODO: ここはdataにうつす内容にするか
+
+        // --- モジュールのインポート ---
+        import visibilityToggle from '../module/visibilityToggle.mjs';
+        import setupSvgDisplayControls from '../module/svgDisplayControls.mjs';
+        import MeiGenerator from '../module/MeiGenerator.mjs';
+        import VrvMeiRenderer from '../module/VrvMeiRenderer.mjs';
+        import SvgViewer from '../module/SvgViewer.mjs';
+        import MidiPlayer from '../module/MidiPlayer.mjs';
+
+
+        function generateMei() {
+            // 1. 初期設定
+            const config = {
+                title: '聴音',
+                date: '2025-04-29',
+
+                // 大譜表
+                staffDefs: [
+                    { n: 1, lines: 5, clef: { shape: 'G', line: 2 } },
+                    { n: 2, lines: 5, clef: { shape: 'F', line: 4 } }
+                ],
+                staffGrpAttrs: { 'bar.thru': 'true', symbol: 'brace' },
+
+                // 調号と拍子記号（初期設定）
+                keySig: "0",                // Cメジャー → sig="0" | Gメジャー → sig="1s" | Fメジャー → sig="1f"
+                meterSig: { count: 2, unit: 2 }, // 2/2 拍子
+            };
+
+            const gen = new MeiGenerator(config);
+
+            // 2. 1小節目を生成
+            gen.startMeasure(1);
+            // soprano (staff 1, layer 1)
+            gen.addStaff({
+                staff: 1, layer: 1,
+                notes: `
+                    <note pname="g" oct="4" dur="2"/>
+                    <note pname="g" oct="4" dur="2"/>`
+            });
+            // alto    (staff 1, layer 2)
+            gen.addStaff({
+                staff: 1, layer: 2,
+                notes: `
+                    <note pname="c" oct="4" dur="2"/>
+                    <note pname="c" oct="4" dur="2"/>`
+            });
+            // tenor   (staff 2, layer 1)
+            gen.addStaff({
+                staff: 2, layer: 1,
+                notes: `
+                    <note pname="g" oct="3" dur="2"/>
+                    <note pname="g" oct="3" dur="2"/>`
+            });
+            // bass    (staff 2, layer 2)
+            gen.addStaff({
+                staff: 2, layer: 2,
+                notes: `
+                    <note pname="c" oct="3" dur="2"/>
+                    <note pname="c" oct="3" dur="2"/>`
+            });
+            gen.endMeasure();
+
+
+            // ２小節目
+            gen.startMeasure(2);
+            // soprano (staff 1, layer 1)
+            gen.addStaff({
+                staff: 1, layer: 1,
+                notes: `
+                    <note pname="g" oct="4" dur="2"/>
+                    <note pname="g" oct="4" dur="2"/>`
+            });
+            // alto    (staff 1, layer 2)
+            gen.addStaff({
+                staff: 1, layer: 2,
+                notes: `
+                    <note pname="c" oct="4" dur="2"/>
+                    <note pname="c" oct="4" dur="2"/>`
+            });
+            // tenor   (staff 2, layer 1)
+            gen.addStaff({
+                staff: 2, layer: 1,
+                notes: `
+                    <note pname="g" oct="3" dur="2"/>
+                    <note pname="g" oct="3" dur="2"/>`
+            });
+            // bass    (staff 2, layer 2)
+            gen.addStaff({
+                staff: 2, layer: 2,
+                notes: `
+                    <note pname="c" oct="3" dur="2"/>
+                    <note pname="c" oct="3" dur="2"/>`
+            });
+            gen.endMeasure();
+
+
+            // 5. 出力＆レンダリング
+            const meiXml = gen.build();
+            //console.log(meiXml);
+            return meiXml;
+        }
+
+        async function renderMei(meiData) {
+            try {
+                const renderer = await VrvMeiRenderer.createInstance();
+
+                // 解答SVGを作成して表示
+                const svg = renderer.renderToSvg(meiData, {});
+                viewSvg('svg-container', svg);
+
+                // 音源MIDIを作成してイベントリスナー登録
+
+                //console.log(renderer.renderToMidi(meiData, {}));
+                const base64 = renderer.renderToMidi(meiData, {});
+                const dataUrl = 'data:audio/midi;base64,' + base64;
+                // midiPlayer.load(dataUrl);
+
+            } catch (error) {
+                console.error("Rendering failed:", error);
+                const svgContainer = document.getElementById('svg-container');
+                if (svgContainer) {
+                    svgContainer.innerText = `Error: ${error.message}`;
+                }
+            }
+        }
+
+        function viewSvg(containerId, svgData) {
+            const viewer = new SvgViewer(containerId);
+            viewer.display(svgData);
+        }
+
+
+        document.addEventListener("DOMContentLoaded", (event) => {
+            console.log('DOMContentLoaded event fired.');
+
+            // --- 各モジュールの初期化 ---
+            try {
+                visibilityToggle(); // 表示/非表示トグルを設定
+                console.log('Visibility toggles set up successfully.');
+            } catch (error) {
+                console.error('Error setting up visibility toggles:', error);
+            }
+
+            try {
+                // ★ SVG表示コントロールを設定 (設定オブジェクトを渡す)
+                setupSvgDisplayControls({
+                    targetContainerId: 'svg-container', // 共通のターゲット
+                    sizeSlider: { // サイズスライダーの設定
+                        sliderId: 'svg-size-slider',
+                        valueDisplayId: 'svg-size-value'
+                    },
+                    heightSlider: { // 高さスライダーの設定
+                        sliderId: 'container-height-slider',
+                        valueDisplayId: 'container-height-value'
+                    }
+                });
+                console.log('SVG display controls set up successfully.');
+            } catch (error) {
+                console.error('Error setting up SVG display controls:', error);
+            }
+
+
+            // --- MEI/SVG/MIDI関連の処理 ---
+            const generatedMeiData = generateMei();
+            renderMei(generatedMeiData).then(() => {
+                // ★ オプション: SVGレンダリング後に高さスライダーを有効化する場合
+                const heightSlider = document.getElementById('container-height-slider');
+                if (heightSlider) {
+                    heightSlider.disabled = false;
+                    console.log('Height slider enabled after SVG rendering.');
+                }
+            });
+
+            //svg-toggleボタンが押された時
+            const svgToggle = document.getElementById('svg-toggle');
+            svgToggle.addEventListener('click', () => {
+                // 必要ならここでもスライダーの有効/無効を切り替えるなど
+            });
+
+            // ... (MIDI Player の設定とイベントリスナー) ...
+            const midiPlayer = new MidiPlayer();
+
+            midiPlayer.addEventListener('ready', () => {
+                console.log('MidiPlayer is ready!');
+            });
+
+            midiPlayer.addEventListener('error', (event) => {
+                console.error('MidiPlayer initialization error:', event.detail);
+            });
+
+            midiPlayer.addEventListener('loaded', () => {
+                console.log('MIDI data loaded.');
+            });
+
+            midiPlayer.addEventListener('play', () => {
+                console.log('Playback started.');
+            });
+
+            midiPlayer.addEventListener('pause', () => {
+                console.log('Playback paused.');
+            });
+
+            midiPlayer.addEventListener('stop', () => {
+                console.log('Playback stopped.');
+            });
+
+            midiPlayer.addEventListener('ended', () => {
+                console.log('Playback ended.');
+            });
+
+            midiPlayer.addEventListener('soundfonturlset', () => {
+                console.log('SoundFont URL has been set.');
+            });
+
+            const playTonicChordButton = document.getElementById('play-tonic-chord-button');
+            const playPracticeExamButton = document.getElementById('play-practice-exam-button');
+            const stopButton = document.getElementById('stop-button');
+            const play1to8Button = document.getElementById('play-1to8-button');
+            const play1to4Button = document.getElementById('play-1to4-button');
+            const play5to8Button = document.getElementById('play-5to8-button');
+            const play1to2Button = document.getElementById('play-1to2-button');
+            const play3to4Button = document.getElementById('play-3to4-button');
+            const play5to6Button = document.getElementById('play-5to6-button');
+            const play7to8Button = document.getElementById('play-7to8-button');
+            const play1Button = document.getElementById('play-1-button');
+            const play2Button = document.getElementById('play-2-button');
+            const play3Button = document.getElementById('play-3-button');
+            const play4Button = document.getElementById('play-4-button');
+            const play5Button = document.getElementById('play-5-button');
+            const play6Button = document.getElementById('play-6-button');
+            const play7Button = document.getElementById('play-7-button');
+            const play8Button = document.getElementById('play-8-button');
+
+            playTonicChordButton.addEventListener('click', () => {
+                // midiPlayer.play(); // MIDIデータロード後に有効化
+                console.log("Play Tonic Chord clicked (MIDI load pending)");
+            });
+        });
+
+    </script>
+</body>
+
+</html>

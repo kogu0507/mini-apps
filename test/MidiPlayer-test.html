@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MidiPlayer Example</title>
+    <script type="module">
+        import MidiPlayer from '../module/MidiPlayer.mjs';
+
+        const midiPlayer = new MidiPlayer();
+
+        midiPlayer.addEventListener('ready', () => {
+            console.log('MidiPlayer is ready!');
+            const base64 = "TVRoZAAAAAYAAQADAHhNVHJrAAAABAD/LwBNVHJrAAAAJACQQ1p4kEVaAJBDAHiQR1oAkEUAeJBIWgCQRwB4kEgAAP8vAE1UcmsAAAAkAJAwWniQMloAkDAAeJA0WgCQMgB4kDVaAJA0AHiQNQAA/y8A";
+            const dataUrl = 'data:audio/midi;base64,' + base64;
+            midiPlayer.load(dataUrl);
+
+
+            // MIDI データのロードなど、初期化完了後の処理
+            /*
+            fetch('your-midi-file.mid', {
+                headers: {
+                    'Content-Type': 'application/x-midi'
+                }
+            })
+                .then(response => response.arrayBuffer())
+                .then(buffer => {
+                    const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+                    const dataUrl = 'data:audio/midi;base64,' + base64;
+                    midiPlayer.load(dataUrl);
+                })
+                .catch(error => console.error('Failed to load MIDI file:', error));
+            */
+        });
+
+        midiPlayer.addEventListener('error', (event) => {
+            console.error('MidiPlayer initialization error:', event.detail);
+        });
+
+        midiPlayer.addEventListener('loaded', () => {
+            console.log('MIDI data loaded.');
+            document.getElementById('playBtn').disabled = false;
+            document.getElementById('pauseBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = false;
+        });
+
+        midiPlayer.addEventListener('play', () => {
+            console.log('Playback started.');
+        });
+
+        midiPlayer.addEventListener('pause', () => {
+            console.log('Playback paused.');
+        });
+
+        midiPlayer.addEventListener('stop', () => {
+            console.log('Playback stopped.');
+        });
+
+        midiPlayer.addEventListener('ended', () => {
+            console.log('Playback ended.');
+        });
+
+        midiPlayer.addEventListener('soundfonturlset', () => {
+            console.log('SoundFont URL has been set.');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const playBtn = document.getElementById('playBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const soundfontUrlInput = document.getElementById('soundfontUrl');
+            const setSoundfontBtn = document.getElementById('setSoundfontBtn');
+
+            playBtn.disabled = true;
+            pauseBtn.disabled = true;
+            stopBtn.disabled = true;
+
+            playBtn.addEventListener('click', () => midiPlayer.play());
+            pauseBtn.addEventListener('click', () => midiPlayer.pause());
+            stopBtn.addEventListener('click', () => midiPlayer.stop());
+            setSoundfontBtn.addEventListener('click', () => {
+                const url = soundfontUrlInput.value;
+                if (url) {
+                    midiPlayer.setSoundfontUrl(url);
+                } else {
+                    console.warn('SoundFont URL is empty.');
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>MidiPlayer Example</h1>
+    <button id="playBtn">Play</button>
+    <button id="pauseBtn">Pause</button>
+    <button id="stopBtn">Stop</button>
+    <div>
+        <label for="soundfontUrl">SoundFont URL:</label>
+        <input type="text" id="soundfontUrl" size="80"
+            value="https://cdn.jsdelivr.net/npm/@magenta/soundfont/soundfonts/sgm_plus">
+        <button id="setSoundfontBtn">Set SoundFont</button>
+    </div>
+</body>
+
+</html>
