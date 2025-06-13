@@ -1,0 +1,730 @@
+/* style.css */
+
+/* ——— 汎用 ——— */
+button {
+    padding: 15px 35px;
+    font-size: 1.3em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #007bff;
+    transition: background-color 0.3s ease;
+    min-width: 180px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* 非表示にするクラス */
+.hidden {
+    display: none !important;
+}
+
+/* ——— 汎用ここまで ——— */
+
+/* ——— 共通コンテナレイアウト ——— */
+.container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* ——— コントロールセクション固有スタイル ——— */
+#control-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- 汎用セクションスタイル --- */
+/* 解答セクションと設定セクションに共通のスタイル */
+#answer-section,
+#settings-section {
+    /* IDを両方指定 */
+    margin-bottom: 25px;
+    /* 他のセクションとの間隔 */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    /* 内側の余白 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* コンテンツを中央寄せ */
+}
+
+/* セクションタイトルとボタンを内包するflexコンテナ（汎用） */
+.section-header {
+    /* クラス名をsection-headerに変更 */
+    display: flex;
+    justify-content: space-between;
+    /* 両端揃え */
+    align-items: center;
+    /* 垂直方向中央寄せ */
+    width: 100%;
+    /* 親の幅いっぱいに広げる */
+    margin-bottom: 20px;
+    /* ヘッダーとコンテンツの間隔 */
+    padding-bottom: 15px;
+    /* 下線とのスペース */
+    border-bottom: 1px solid #eee;
+    /* 下線 */
+}
+
+/* セクションタイトルテキストのスタイル（汎用） */
+.section-header span {
+    /* クラス名をsection-headerに変更 */
+    font-size: 1.8em;
+    /* H2のような大きさに調整 */
+    font-weight: bold;
+    color: #333;
+}
+
+/* 解答表示/隠すボタンのスタイル（汎用） */
+.visibility-toggle-button {
+    padding: 10px 20px;
+    /* 少し小さめに */
+    font-size: 1em;
+    /* フォントサイズも調整 */
+    min-width: unset;
+    /* 親ボタンのmin-widthをリセット */
+    background-color: #6c757d;
+    /* 灰色系の色に */
+}
+
+.visibility-toggle-button:hover {
+    background-color: #5a6268;
+    /* ホバー時の色 */
+}
+
+/* --- settingsContent の初期状態（デフォルトで隠す場合） --- */
+/* もし設定セクションを初期状態で隠したい場合は、以下のhiddenクラスを追加します。
+   今回の変更では、HTMLで `settingsContent` に `hidden` クラスを付与していないので、
+   デフォルトでは表示された状態になります。必要に応じてHTML側で `hidden` を追加してください。
+*/
+/*
+#settingsContent.hidden {
+    display: none;
+}
+*/
+
+
+
+/* -- 汎用的なコントロールグループの調整 -- */
+/* settingsContent内のcontrol-groupにmax-widthを適用し、中央寄せにする */
+/* これにより、モバイルで横幅が広がりすぎるのを防ぎます */
+#settingsContent .control-group {
+    width: 100%;
+    /* 親要素の幅いっぱいに */
+    max-width: 600px;
+    /* PC表示時の最大幅を調整（必要であれば） */
+    margin-left: auto;
+    /* 中央寄せ */
+    margin-right: auto;
+    /* 中央寄せ */
+    box-sizing: border-box;
+    /* paddingを含めた幅にする */
+}
+
+
+/* ——— コントロールセクション系 ——— */
+.control-group {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin-bottom: 25px;
+    width: auto;
+    max-width: 700px;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.controls label {
+    font-size: 1.0em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.controls input[type="radio"],
+.controls input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+}
+
+/* 各button-group間のスペース */
+.button-group {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* メッセージのスタイル */
+.message {
+    font-size: 1.1em;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+/* button-group 内の全てのボタンに適用される基本スタイル */
+.button-group button {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+
+/* 各ボタンがグループ内でくっつくように、角丸とボーダーを調整 */
+.button-group button:not(:last-child) {
+    border-bottom: 1px solid #0056b3;
+    border-radius: 0;
+}
+
+/* 最初のボタンのスタイル（トップの角丸） */
+.button-group button:first-child {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+/* 最後のボタンのスタイル（ボトムの角丸） */
+.button-group button:last-child {
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+/* グループにボタンが1つしかない場合のスタイル */
+.button-group button:only-child {
+    border-radius: 7px;
+}
+
+/* 特定のボタンの背景色（例: 問題を生成ボタン） */
+#startButton {
+    background-color: #28a745;
+}
+
+#startButton:hover {
+    background-color: #218838;
+}
+
+/* その他のボタンのホバーエフェクト */
+.button-group button:hover {
+    background-color: #0056b3;
+}
+
+/* 解答表示エリアのスタイル（hiddenクラスがない場合の表示） */
+#answerDisplay {
+    width: 100%;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    text-align: center;
+    color: #495057;
+    font-weight: bold;
+}
+
+#answerDisplay.hidden {
+    display: none;
+}
+
+/* 解答テキストのスタイル */
+#correctAnswer {
+    font-size: 1.2em;
+    color: #007bff;
+}
+
+
+.message {
+    margin-top: 25px;
+    font-size: 1.2em;
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* ——— コントロールセクション系 ここまで ——— */
+
+/* 解答表示エリア内の「正解」見出しのスタイル */
+#answerDisplay p strong {
+    font-size: 1.5em;
+    color: #007bff;
+    margin-bottom: 15px;
+    display: block;
+}
+
+
+/* dl, dt, dd のスタイル */
+.answer-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0px 0;
+    margin: 0 auto;
+    max-width: 400px;
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.answer-details dt {
+    font-weight: bold;
+    color: #555;
+    margin-top: 10px;
+    white-space: nowrap;
+}
+
+.answer-details dd {
+    margin: 0;
+    color: #333;
+}
+
+
+/* -------- ルート選択鍵盤 -------- */
+
+.controls.root-notes {
+    display: grid;
+    /* モバイルでは白鍵の幅を少し狭くし、黒鍵の重なりを調整 */
+    grid-template-columns: repeat(24, 1fr);
+    /* 24カラムを維持 */
+    grid-template-rows: auto auto;
+    /* 黒鍵、白鍵の2行 */
+    gap: 5px;
+    align-items: end;
+    margin: 0 auto;
+    max-width: 600px;
+    /* PCでの最大幅 */
+
+    /* スクロール関連のスタイルはそのまま */
+    overflow-x: auto;
+    white-space: nowrap;
+    /* ラベル内のテキストが改行されないように */
+    padding-bottom: 10px;
+    /* スクロールバーのためのスペース */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+
+}
+
+/* WebKit系ブラウザ（Chrome, Safariなど）用のスクロールバーのスタイル */
+.controls.root-notes::-webkit-scrollbar {
+    height: 10px;
+}
+
+.controls.root-notes::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.controls.root-notes::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.controls.root-notes::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 各鍵盤の基本スタイル */
+.controls.root-notes .grid-key {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 2px;
+    /* パディングを少し減らす */
+    border-radius: 4px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 35px;
+    /* 最小幅を少し広げてテキストの折り返しを軽減 */
+    white-space: normal;
+    /* テキストが折り返せるようにする */
+    text-align: center;
+}
+
+/* 白鍵のスタイル */
+.controls.root-notes .grid-key.C-key,
+.controls.root-notes .grid-key.D-key,
+.controls.root-notes .grid-key.E-key,
+.controls.root-notes .grid-key.F-key,
+.controls.root-notes .grid-key.G-key,
+.controls.root-notes .grid-key.A-key,
+.controls.root-notes .grid-key.B-key {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #333;
+    grid-row: 2;
+    height: 80px;
+    /* 白鍵の高さ */
+}
+
+/* 黒鍵のスタイル */
+.controls.root-notes .grid-key.Csharp-Db-key,
+.controls.root-notes .grid-key.Dsharp-Eb-key,
+.controls.root-notes .grid-key.Fsharp-Gb-key,
+.controls.root-notes .grid-key.Gsharp-Ab-key,
+.controls.root-notes .grid-key.Asharp-Bb-key {
+    background-color: #333;
+    border: 1px solid #666;
+    color: #eee;
+    font-size: 0.9em;
+    grid-row: 1;
+    height: 50px;
+    /* 黒鍵の高さ */
+    position: relative;
+    z-index: 1;
+    width: 45px;
+    /* 黒鍵の幅 */
+    padding: 8px 2px;
+    /* パディングを少し減らす */
+    font-size: 0.8em;
+    /* フォントサイズを調整 */
+}
+
+/* チェックボックスのスタイル調整 (全ての鍵盤に適用) */
+.controls.root-notes .grid-key input[type="checkbox"] {
+    margin-top: 5px;
+    margin-right: 0;
+    order: 2;
+}
+
+.controls.root-notes .grid-key span {
+    order: 1;
+    line-height: 1.2;
+    /* 行の高さを調整 */
+}
+
+/* 各鍵盤のグリッド列位置の指定 */
+/* 白鍵 */
+.C-key {
+    grid-column: 1 / span 4;
+}
+
+.D-key {
+    grid-column: 5 / span 4;
+}
+
+.E-key {
+    grid-column: 9 / span 4;
+}
+
+.F-key {
+    grid-column: 13 / span 4;
+}
+
+.G-key {
+    grid-column: 17 / span 4;
+}
+
+.A-key {
+    grid-column: 21 / span 4;
+}
+
+.B-key {
+    grid-column: 25 / span 4;
+}
+
+/* 黒鍵 */
+.Csharp-Db-key {
+    grid-column: 3 / span 3;
+    /* 位置と幅を調整 */
+}
+
+.Dsharp-Eb-key {
+    grid-column: 7 / span 3;
+    /* 位置と幅を調整 */
+}
+
+.Fsharp-Gb-key {
+    grid-column: 15 / span 3;
+    /* 位置と幅を調整 */
+}
+
+.Gsharp-Ab-key {
+    grid-column: 19 / span 3;
+    /* 位置と幅を調整 */
+}
+
+.Asharp-Bb-key {
+    grid-column: 23 / span 3;
+    /* 位置と幅を調整 */
+}
+
+/* 「全て選択」チェックボックスを独立した行に */
+.full-width-checkbox {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+/* -------- コードタイプ選択リスト -------- */
+
+/* 親要素のスタイルは既存の .control-group が適用される */
+
+/* 縦グループボタンのコンテナ */
+.chord-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 10px;
+    max-width: 500px;
+    /* PCでの最大幅 */
+    margin: 0 auto;
+    /* 中央寄せ */
+}
+
+/* 各ボタン（label）のスタイル */
+.chord-buttons label {
+    display: block;
+    width: 100%;
+    /* 親の幅いっぱいに */
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    position: relative;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* チェックボックスを隠す */
+.chord-buttons input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* チェックされたlabel要素自体のスタイルを変更 */
+.chord-buttons label:has(input[type="checkbox"]:checked) {
+    background-color: #e0f2ff;
+    border-color: #007bff;
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* チェックされたボタン内のテキストにチェックマークのスペースを確保 */
+.chord-buttons input[type="checkbox"]:checked+.chord-name {
+    padding-left: 20px;
+}
+
+/* チェックマークを左に追加 */
+.chord-buttons input[type="checkbox"]:checked+.chord-name::before {
+    content: '✔';
+    color: #007bff;
+    font-size: 0.9em;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* ラベルにマウスが乗った時のスタイル (PC向け) */
+.chord-buttons label:hover {
+    background-color: #e9e9e9;
+    border-color: #aaa;
+}
+
+/* チェックされている状態でマウスが乗った時のスタイル */
+.chord-buttons label:has(input[type="checkbox"]:checked):hover {
+    background-color: #cceeff;
+    border-color: #0056b3;
+}
+
+/* アクティブ（タップ/クリック中）時のスタイル */
+.chord-buttons label:active {
+    background-color: #ddd;
+    border-color: #999;
+}
+
+/* 英語と日本語のテキストコンテナ */
+.chord-buttons .chord-name {
+    display: block;
+    font-size: 1.1em;
+}
+
+
+/* --- レスポンシブデザイン（モバイル対応） --- */
+/* @media (max-width: 768px) は変更なし */
+@media (max-width: 768px) {
+
+    /* container の横幅調整 */
+    .container {
+        padding: 10px;
+        /* モバイルではパディングを減らす */
+    }
+
+    /* 各セクションのパディング調整 */
+    #answer-section,
+    #settings-section {
+        padding: 15px;
+        /* モバイルでのパディングを調整 */
+    }
+
+    /* セクションヘッダーのフォントサイズ調整 */
+    .section-header span {
+        font-size: 1.5em;
+        /* モバイルでのタイトルサイズ調整 */
+    }
+
+    /* トグルボタンのサイズ調整 */
+    .visibility-toggle-button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    /* ルート音の鍵盤レイアウト調整 */
+    .controls.root-notes {
+        /* モバイルではスクロールを促すために少し小さめに表示 */
+        gap: 3px;
+        /* 鍵盤間の隙間を減らす */
+    }
+
+    .controls.root-notes .grid-key {
+        min-width: 30px;
+        /* 最小幅をさらに調整 */
+        padding: 6px 1px;
+        /* パディングをさらに減らす */
+        font-size: 0.8em;
+        /* フォントサイズも調整 */
+        height: 70px;
+        /* 白鍵の高さも少し調整 */
+    }
+
+    .controls.root-notes .grid-key.Csharp-Db-key,
+    .controls.root-notes .grid-key.Dsharp-Eb-key,
+    .controls.root-notes .grid-key.Fsharp-Gb-key,
+    .controls.root-notes .grid-key.Gsharp-Ab-key,
+    .controls.root-notes .grid-key.Asharp-Bb-key {
+        width: 35px;
+        /* 黒鍵の幅を調整 */
+        height: 45px;
+        /* 黒鍵の高さも調整 */
+        font-size: 0.7em;
+        /* 黒鍵のフォントサイズも調整 */
+    }
+
+    /* 黒鍵のグリッド列位置の微調整 (モバイル向け) */
+    .Csharp-Db-key {
+        grid-column: 3 / span 3;
+    }
+
+    /* 調整なしでOKな場合も */
+    .Dsharp-Eb-key {
+        grid-column: 7 / span 3;
+    }
+
+    .Fsharp-Gb-key {
+        grid-column: 15 / span 3;
+    }
+
+    .Gsharp-Ab-key {
+        grid-column: 19 / span 3;
+    }
+
+    .Asharp-Bb-key {
+        grid-column: 23 / span 3;
+    }
+
+
+    /* コードタイプ選択ボタンの調整 */
+    .chord-buttons {
+        padding: 0;
+        /* パディングをリセットして、親のcontrol-groupのパディングに任せる */
+        gap: 6px;
+        /* ボタン間の隙間を少し減らす */
+    }
+
+    .chord-buttons label {
+        padding: 10px;
+        /* パディングを調整 */
+        font-size: 0.9em;
+        /* フォントサイズを調整 */
+        border-radius: 6px;
+    }
+
+    .chord-buttons .chord-name {
+        font-size: 0.9em;
+        /* フォントサイズを調整 */
+    }
+
+    .chord-buttons input[type="checkbox"]:checked+.chord-name {
+        padding-left: 20px;
+        /* チェックマークのスペース調整 */
+    }
+
+    .chord-buttons input[type="checkbox"]:checked+.chord-name::before {
+        left: 5px;
+        /* チェックマークの位置調整 */
+        font-size: 0.8em;
+    }
+}
+
+/* さらに小さなスマートフォン向けの調整 (例: 480px以下) */
+@media (max-width: 480px) {
+    .controls.root-notes .grid-key {
+        min-width: 25px;
+        /* さらに最小幅を調整 */
+        padding: 5px 0px;
+        /* パディングをさらに減らす */
+        font-size: 0.7em;
+        height: 60px;
+        /* 白鍵の高さ */
+    }
+
+    .controls.root-notes .grid-key.Csharp-Db-key,
+    .controls.root-notes .grid-key.Dsharp-Eb-key,
+    .controls.root-notes .grid-key.Fsharp-Gb-key,
+    .controls.root-notes .grid-key.Gsharp-Ab-key,
+    .controls.root-notes .grid-key.Asharp-Bb-key {
+        width: 30px;
+        /* 黒鍵の幅 */
+        height: 40px;
+        /* 黒鍵の高さ */
+        font-size: 0.6em;
+    }
+
+    .chord-buttons label {
+        padding: 8px;
+        /* さらにパディングを減らす */
+        font-size: 0.8em;
+    }
+
+    .chord-buttons .chord-name {
+        font-size: 0.8em;
+    }
+
+    .chord-buttons input[type="checkbox"]:checked+.chord-name {
+        padding-left: 18px;
+    }
+
+    .chord-buttons input[type="checkbox"]:checked+.chord-name::before {
+        left: 3px;
+        font-size: 0.7em;
+    }
+}

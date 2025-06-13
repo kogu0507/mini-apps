@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chord Type Dictation Mini</title>
+    <link rel="stylesheet" href="./style.css">
+    <script type="module" src="./script.js"></script>
+</head>
+
+<body>
+
+    <section id="control-section" class="container">
+        <div class="button-group">
+            <button id="startButton">問題を生成</button>
+        </div>
+
+        <p class="message" id="statusMessage">準備中...</p>
+
+        <div class="button-group">
+            <button id="playNormalChordButton">もう１回 再生</button>
+            <button id="playArpeggioButton">分散和音で再生</button>
+        </div>
+    </section>
+
+    <section id="answer-section" class="container">
+        <div class="section-header"> <span>解答</span>
+            <button class="visibility-toggle-button" data-visibility-toggle-target="answerDisplay">解答を表示</button>
+        </div>
+        <div id="answerDisplay" class="hidden">
+            <div id="correctAnswer"></div>
+        </div>
+    </section>
+
+    <section id="settings-section" class="container">
+        <div class="section-header"> <span>設定</span> <button class="visibility-toggle-button"
+                data-visibility-toggle-target="settingsContent">設定を表示</button>
+        </div>
+        <div id="settingsContent" class="hidden">
+            <div class="control-group">
+                <div class="controls">
+                    <label>
+                        <input type="radio" name="instrument" value="synth" checked> シンセ
+                    </label>
+                    <label>
+                        <input type="radio" name="instrument" value="sampler"> サンプラー
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls root-notes simple-keyboard-grid">
+                    <label class="grid-key C-key"><input type="checkbox" name="rootNote" value="C" checked> C</label>
+                    <label class="grid-key Csharp-Db-key"><input type="checkbox" name="rootNote" value="C#_Db" checked>
+                        C# /
+                        Db</label>
+                    <label class="grid-key D-key"><input type="checkbox" name="rootNote" value="D" checked> D</label>
+                    <label class="grid-key Dsharp-Eb-key"><input type="checkbox" name="rootNote" value="D#_Eb" checked>
+                        D# /
+                        Eb</label>
+                    <label class="grid-key E-key"><input type="checkbox" name="rootNote" value="E" checked> E</label>
+                    <label class="grid-key F-key"><input type="checkbox" name="rootNote" value="F" checked> F</label>
+                    <label class="grid-key Fsharp-Gb-key"><input type="checkbox" name="rootNote" value="F#_Gb" checked>
+                        F# /
+                        Gb</label>
+                    <label class="grid-key G-key"><input type="checkbox" name="rootNote" value="G" checked> G</label>
+                    <label class="grid-key Gsharp-Ab-key"><input type="checkbox" name="rootNote" value="G#_Ab" checked>
+                        G# / Ab</label>
+                    <label class="grid-key A-key"><input type="checkbox" name="rootNote" value="A" checked> A</label>
+                    <label class="grid-key Asharp-Bb-key"><input type="checkbox" name="rootNote" value="A#_Bb" checked>
+                        A# /
+                        Bb</label>
+                    <label class="grid-key B-key"><input type="checkbox" name="rootNote" value="B" checked> B</label>
+                    <label class="full-width-checkbox"><input type="checkbox" name="rootNote" value="allRootNotes"
+                            checked>
+                        全て選択</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls chord-buttons">
+                    <label>
+                        <input type="checkbox" name="chordType" value="majorTriad" checked>
+                        <span class="chord-name">Major Triad<br>長三和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="minorTriad" checked>
+                        <span class="chord-name">Minor Triad<br>短三和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="augmentedTriad" checked>
+                        <span class="chord-name">Augmented Triad<br>増三和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="diminishedTriad" checked>
+                        <span class="chord-name">Diminished Triad<br>減三和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="major7" checked>
+                        <span class="chord-name">Major 7th<br>長七の和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="minor7" checked>
+                        <span class="chord-name">Minor 7th<br>短七の和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="dominant7" checked>
+                        <span class="chord-name">Dominant 7th<br>属七の和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="augmentedMajor7" checked>
+                        <span class="chord-name">Augmented Major 7th<br>増七の和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="halfDiminished7" checked>
+                        <span class="chord-name">Half Diminished 7th<br>半減七の和音<br>減五短七の和音<br>導七の和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="diminished7" checked>
+                        <span class="chord-name">Diminished 7th<br>減七の和音</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="chordType" value="allChordTypes" checked>
+                        <span class="chord-name">全て選択</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+
+</html>
