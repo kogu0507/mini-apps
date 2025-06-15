@@ -1,7 +1,7 @@
 // script.js
 
 // import { loadToneJs } from './modules/tonejs-loader.mjs'; // 開発用
-import { loadToneJs } from 'https://cdn.jsdelivr.net/gh/kogu0507/mini-apps@main/chord-type-dictation-mini/module/tonejs-loader.mjs'; // 本番用
+import { loadToneJs } from 'https://cdn.jsdelivr.net/gh/kogu0507/mini-apps@main/chord-type-dictation-mini/modules/tonejs-loader.mjs'; // 本番用
 
 
 // アプリケーションの初期化処理
